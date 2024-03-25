@@ -1,6 +1,7 @@
 package data
 
 import (
+	"database/sql"
 	"time"
 
 	"github.com/mystpen/Greenlight-API/internal/validator"
@@ -11,10 +12,52 @@ type Movie struct {
 	CreatedAt time.Time `json:"-"`
 	Title     string    `json:"title"`
 	Year      int32     `json:"year,omitempty"`
-	Runtime   Runtime     `json:"runtime,omitempty,string"`
+	Runtime   Runtime   `json:"runtime,omitempty,string"`
 	Genres    []string  `json:"genres,omitempty"`
 	Version   int32     `json:"version"`
 	// time the movie information is updated
+}
+
+type MovieModel struct {
+	DB *sql.DB
+}
+
+func (m MovieModel) Insert(movie *Movie) error {
+	return nil
+}
+
+func (m MovieModel) Get(id int64) (*Movie, error) {
+	return nil, nil
+}
+
+func (m MovieModel) Update(movie *Movie) error {
+	return nil
+}
+
+func (m MovieModel) Delete(id int64) error {
+	return nil
+}
+
+type MockMovieModel struct{}
+
+func (m MockMovieModel) Insert(movie *Movie) error {
+	// Mock the action...
+	return nil
+}
+
+func (m MockMovieModel) Get(id int64) (*Movie, error) {
+	// Mock the action...
+	return nil, nil
+}
+
+func (m MockMovieModel) Update(movie *Movie) error {
+	// Mock the action...
+	return nil
+}
+
+func (m MockMovieModel) Delete(id int64) error {
+	// Mock the action...
+	return nil
 }
 
 func ValidateMovie(v *validator.Validator, movie *Movie) {
