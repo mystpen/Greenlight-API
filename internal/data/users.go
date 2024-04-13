@@ -11,6 +11,10 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+var ErrDuplicateEmail = errors.New("duplicate email")
+
+var AnonymousUser = &User{}
+
 type User struct {
 	ID        int64     `json:"id"`
 	CreatedAt time.Time `json:"created_at"`
@@ -21,7 +25,9 @@ type User struct {
 	Version   int       `json:"-"`
 }
 
-var ErrDuplicateEmail = errors.New("duplicate email")
+func (u *User) IsAnonymous() bool {
+	return u == AnonymousUser
+}
 
 type password struct {
 	plaintext *string
@@ -190,12 +196,12 @@ func (m UserModel) GetForToken(tokenScope, tokenPlaintext string) (*User, error)
 	WHERE tokens.hash = $1
 	AND tokens.scope = $2
 	AND tokens.expiry > $3`
-	
+
 	args := []any{tokenHash[:], tokenScope, time.Now()}
 	var user User
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
-	
+
 	err := m.DB.QueryRowContext(ctx, query, args...).Scan(
 		&user.ID,
 		&user.CreatedAt,
