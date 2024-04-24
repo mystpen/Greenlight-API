@@ -51,7 +51,7 @@ func calculateMetadata(totalRecords, page, pageSize int) Metadata {
 		// Note that we return an empty Metadata struct if there are no records.
 		return Metadata{}
 	}
-	
+
 	return Metadata{
 		CurrentPage:  page,
 		PageSize:     pageSize,

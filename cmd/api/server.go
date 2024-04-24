@@ -41,20 +41,20 @@ func (app *application) serve() error {
 		defer cancel()
 
 		err := srv.Shutdown(ctx)
-        if err != nil {
-            shutdownError <- err
-        }
+		if err != nil {
+			shutdownError <- err
+		}
 
 		app.logger.PrintInfo("completing background tasks", map[string]string{
-            "addr": srv.Addr,
-        })
+			"addr": srv.Addr,
+		})
 
 		// Call Wait() to block until our WaitGroup counter is zero --- essentially
-        // blocking until the background goroutines have finished. Then we return nil on
-        // the shutdownError channel, to indicate that the shutdown completed without
-        // any issues.
-        app.wg.Wait()
-        shutdownError <- nil
+		// blocking until the background goroutines have finished. Then we return nil on
+		// the shutdownError channel, to indicate that the shutdown completed without
+		// any issues.
+		app.wg.Wait()
+		shutdownError <- nil
 	}()
 
 	// Likewise log a "starting server" message.

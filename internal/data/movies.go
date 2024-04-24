@@ -182,7 +182,7 @@ func (m MovieModel) GetAll(title string, genres []string, filters Filters) ([]*M
 		if err != nil {
 			return nil, Metadata{}, err
 		}
-		
+
 		movies = append(movies, &movie)
 	}
 	// When the rows.Next() loop has finished, call rows.Err() to retrieve any error
@@ -196,7 +196,7 @@ func (m MovieModel) GetAll(title string, genres []string, filters Filters) ([]*M
 	return movies, metadata, nil
 }
 
-//Mock
+// Mock
 type MockMovieModel struct{}
 
 func (m MockMovieModel) Insert(movie *Movie) error {

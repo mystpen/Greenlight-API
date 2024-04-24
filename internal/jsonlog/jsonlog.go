@@ -82,14 +82,14 @@ func (l *Logger) print(level Level, message string, properties map[string]string
 	if level >= LevelError {
 		aux.Trace = string(debug.Stack())
 	}
-	
+
 	var line []byte
-	
+
 	line, err := json.Marshal(aux)
 	if err != nil {
 		line = []byte(LevelError.String() + ": unable to marshal log message: " + err.Error())
 	}
-	
+
 	l.mu.Lock()
 	defer l.mu.Unlock()
 	// Write the log entry followed by a newline.

@@ -64,7 +64,7 @@ func (m PermissionModel) AddForUser(userID int64, codes ...string) error {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
-	
+
 	_, err := m.DB.ExecContext(ctx, query, userID, pq.Array(codes))
 	return err
 }
