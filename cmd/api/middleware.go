@@ -4,7 +4,6 @@ import (
 	"errors"
 	"expvar"
 	"fmt"
-	"net"
 	"net/http"
 	"strconv"
 	"strings"
@@ -12,6 +11,8 @@ import (
 	"time"
 
 	"github.com/felixge/httpsnoop"
+	"github.com/tomasen/realip"
+
 	"github.com/mystpen/Greenlight-API/internal/data"
 	"github.com/mystpen/Greenlight-API/internal/validator"
 	"golang.org/x/time/rate"
@@ -63,12 +64,8 @@ func (app *application) rateLimit(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if app.config.limiter.enabled {
 			// Extract the client's IP address from the request.
-			ip, _, err := net.SplitHostPort(r.RemoteAddr)
-			if err != nil {
-				app.serverErrorResponse(w, r, err)
-				return
-			}
 
+			ip := realip.FromRequest(r)
 			mu.Lock()
 
 			//  a new rate limiter which allows an average of 2 requests per second,
@@ -223,7 +220,6 @@ func (app *application) metrics(next http.Handler) http.Handler {
 	totalResponsesSentByStatus := expvar.NewMap("total_responses_sent_by_status")
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
 		totalRequestsReceived.Add(1)
 		// Call the next handler in the chain.
 		// next.ServeHTTP(w, r)
